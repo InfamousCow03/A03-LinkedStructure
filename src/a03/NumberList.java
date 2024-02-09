@@ -178,12 +178,29 @@ public class NumberList {
      *
      * Example: item = 2.5
      * [1.1, 4.4, 2.2, 1.1, 3.3, 2.2] -> returns false and the list remains unchanged
-	 *
+     *
      * @param item The item to be removed from the linked list.
      * @return True if the item is found and removed and false otherwise.
      */
     public boolean remove(double item) {
-    	return false; // TODO
+        if (head == null) { // If the list is empty
+            return false;
+        }
+        if (head.item == item) { // If the item is at the head of the list
+            head = head.next;
+            n--;
+            return true;
+        }
+        Node current = head;
+        while (current.next != null) {
+            if (current.next.item == item) {
+                current.next = current.next.next; // Adjust pointers to skip the node with the item
+                n--;
+                return true;
+            }
+            current = current.next;
+        }
+        return false; // Item not found in the list
     }
     
     /**
@@ -197,7 +214,28 @@ public class NumberList {
      * [1.1, 4.4, 2.2, 1.1, 3.3, 2.2, 1.1] -> [1.1, 4.4, 2.2, 3.3]
      */
     public void removeDuplicates() {
-        // TODO
+        if (head == null || head.next == null) { // If the list is empty or has only one element
+            return;
+        }
+        
+        Set<Double> seen = new HashSet<>();
+        Node current = head;
+        Node previous = null; // To track the previous node
+        
+        while (current != null) {
+            if (seen.contains(current.item)) { // If the current element is a duplicate
+                if (previous == null) { // If the duplicate is at the head
+                    head = current.next; // Move the head to the next node
+                } else {
+                    previous.next = current.next; // Skip the current node
+                }
+                n--; // Decrease the size of the list
+            } else {
+                seen.add(current.item); // Add the unique element to the set
+                previous = current; // Update the previous node
+            }
+            current = current.next; // Move to the next node
+        }
     }
     
     /**
@@ -216,7 +254,41 @@ public class NumberList {
      * @throws IllegalArgumentException if the number of positions is not positive. 
      */
     public void rotateRight(int positions) {
-    	// TODO
+        if (positions <= 0) {
+            throw new IllegalArgumentException("Number of positions must be positive");
+        }
+        
+        if (head == null || head.next == null) { // If the list is empty or has only one element
+            return;
+        }
+        
+        // Step 1: Calculate the length of the linked list
+        int length = 1;
+        Node tail = head;
+        while (tail.next != null) {
+            tail = tail.next;
+            length++;
+        }
+        
+        // Step 2: Adjust the number of positions
+        positions %= length;
+        
+        // Step 3: If no rotation is required, return
+        if (positions == 0) {
+            return;
+        }
+        
+        // Step 4: Locate the new tail node and the new head node
+        Node newTail = head;
+        for (int i = 1; i < length - positions; i++) {
+            newTail = newTail.next;
+        }
+        Node newHead = newTail.next;
+        
+        // Step 5: Perform the rotation
+        newTail.next = null; // Set newTail as the new tail node
+        tail.next = head; // Connect the original tail to the original head
+        head = newHead; // Set newHead as the new head node
     }
 
     @Override
