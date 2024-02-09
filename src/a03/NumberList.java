@@ -9,7 +9,7 @@ import java.util.Set;
  * It is designed as a practice opportunity to
  * learn how to manipulate linked structures.
  * 
- * @author ..........
+ * @author Wesley Elliott, and Josiah Dunn
  */
 public class NumberList {
     private Node head; // first node of the list or null
@@ -72,8 +72,10 @@ public class NumberList {
      * @return first element.
      * @throws NoSuchElementException if the list is empty.
      */
-    public double firstElement() {   	
-    	return 0; // TODO
+    public double firstElement() {
+    	if(n < 1)
+    		throw new NoSuchElementException("List is Empty");
+    	return head.item;
     }
     
     /**
@@ -83,7 +85,9 @@ public class NumberList {
      * @throws IllegalStateException if the list is empty.
      */
     public boolean endsPositive() {
-    	return false; // TODO
+    	if(n < 1)
+    		throw new IllegalStateException("List is Empty");
+    	return tail.item > 0;
     }
     
     /**
@@ -96,7 +100,17 @@ public class NumberList {
      * @throws IllegalStateException if the list is empty.
      */
     public double average() {
-    	return 0; // TODO
+    	if(n < 1)
+    		throw new IllegalStateException("List is Empty");
+    	double sum = 0;
+    	Node current = head;
+    	
+    	while(current != null) {
+    		sum += current.item;
+    		current = current.next;
+    	}
+    	
+    	return sum / n;
     }
     
     /**
@@ -108,7 +122,12 @@ public class NumberList {
 	 * @param item The item value to fill the linked list with.
 	 */
     public void fill(double item) {
-        // TODO
+    	Node current = head;
+    	
+    	while(current != null) {
+    		current.item = item;
+    		current = current.next;
+    	}
     }
     
     /**
@@ -124,7 +143,29 @@ public class NumberList {
      * @throws IndexOutOfBoundsException If the index is outside the valid range [0, n].
      */
     public void insert(int index, double item) {
-    	// TODO
+        if(index < 0 || index > n)
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        
+        if (index == n) {
+            add(item);
+            return;
+        }
+        
+        Node newNode = new Node();
+        newNode.item = item;
+        
+        if (index == 0) {
+            newNode.next = head;
+            head = newNode;
+        } else {
+            Node current = head;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.next;
+            }
+            newNode.next = current.next;
+            current.next = newNode;
+        }
+        n++;
     }
     
     /**
